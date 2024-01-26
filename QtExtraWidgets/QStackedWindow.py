@@ -185,6 +185,10 @@ class QStackedWindow(QWidget):
 					traceback.print_exc()
 				else:
 					break
+		if moduleClass!=None:
+			if hasattr(moduleClass,"enabled"):
+				if moduleClass.enabled==False:
+					moduleClass=None
 		return(moduleClass)
 	#def _getClassFromMod
 
