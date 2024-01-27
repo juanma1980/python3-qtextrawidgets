@@ -67,7 +67,7 @@ class QStackedWindow(QWidget):
 		row=0
 		for cont in range(0,self.lstNav.count()):
 			w=self.lstNav.item(cont)
-			if w.data(1)==idx:
+			if w.data(Qt.UserRole)==idx:
 				row=cont
 				break
 		return(row)
@@ -144,8 +144,8 @@ class QStackedWindow(QWidget):
 		item=QListWidgetItem(icon,props.get("shortDesc"))
 		item.setToolTip(props.get("tooltip"))
 		idx=props.get("index")
-		item.setData(1,idx)
-		item.setIcon(icon)
+		item.setData(Qt.UserRole,idx)
+		#item.setIcon(icon)
 		self.lstNav.insertItem(idx,item)
 		if props.get("visible",True)==False:
 			item.setHidden(True)
