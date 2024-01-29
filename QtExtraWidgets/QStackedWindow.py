@@ -136,6 +136,12 @@ class QStackedWindow(QWidget):
 		self.lblBanner.setPixmap(banner)
 	#def setBanner
 
+	def disableNavBar(self,state):
+		if isinstance(state,bool)==False:
+			state=True
+		self.lstNav.setVisible(not state)
+	#def disableNavBar
+
 	def addStack(self,stack,**kwargs):
 		callback=kwargs.get("callback",stack.__initScreen__)
 		props=stack.getProps()
@@ -155,9 +161,11 @@ class QStackedWindow(QWidget):
 	def _importModuleFromFile(self,fmodule):
 		module=None
 		if fmodule.endswith(".py") and os.path.basename(fmodule)!='__init__.py':
-			module=fmodule.replace(".py","").replace("/",".")
+			sys.path.append( os.path.dirname(fmodule))
+			modName=os.path.basename(fmodule.replace(".py","")).replace("/",".")
 			try:
-				spec = importlib.util.spec_from_file_location(module,fmodule )
+				modpackage=os.path.basename(os.path.dirname(fmodule))
+				spec = importlib.util.spec_from_file_location("{}.{}".format(modpackage,modName),fmodule,submodule_search_locations=[os.path.dirname(fmodule)])
 				module = importlib.util.module_from_spec(spec)
 			except Exception as e:
 				self._debug("Unable to load {0} (perhaps aux lib): {1}".format(module,str(e)))
@@ -206,4 +214,6 @@ class QStackedWindow(QWidget):
 					modulesByIndex[props.get("index",1)]=moduleClass
 		for mod in sorted(modulesByIndex.keys()):
 			self.addStack(modulesByIndex[mod])
+		if len(modulesByIndex)<=1:
+			self.disableNavBar(True)
 	#def _importStacks(self):
