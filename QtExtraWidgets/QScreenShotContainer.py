@@ -1,7 +1,7 @@
 from PySide2.QtWidgets import QWidget, QPushButton,QScrollArea,QLabel,QHBoxLayout,QDialog,QAbstractItemView,QGridLayout,QTableWidgetItem,QDesktopWidget
 from PySide2 import QtGui
 from PySide2.QtCore import Qt,Signal,QEvent,QThread,QSize
-from . import _QTableTouchWidget
+from . import QTableTouchWidget
 import os,hashlib,requests
 
 class _loadScreenShot(QThread):
