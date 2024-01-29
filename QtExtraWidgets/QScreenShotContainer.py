@@ -12,10 +12,16 @@ class _loadScreenShot(QThread):
 		self.cacheDir=None
 		if len(args)>1:
 			self.setCacheDir(args[1])
+		self.destroyed.connect(self._clean)
 	#def __init__
 
 	def _debug(self,msg):
 		print("{}".format(msg))
+	#def _debug
+
+	def _clean(self):
+		self.quit()
+	#def _clean
 	
 	def setCacheDir(self,cacheDir):
 		sureDirs=["/tmp/.cache",os.path.join(os.environ.get('HOME',''),".cache")]
@@ -70,6 +76,7 @@ class _loadScreenShot(QThread):
 		self.imageLoaded.emit(pxm)
 		return True
 	#def run
+#class _loadScreenShot
 
 class QScreenShotContainer(QWidget):
 	def __init__(self,parent=None):
@@ -87,7 +94,6 @@ class QScreenShotContainer(QWidget):
 		self.cacheDir=None
 		self.th=[]
 		self.btnImg={}
-		self.destroyed.connect(lambda: self._cleanThreads())
 	#def __init__
 
 	def setCacheDir(self,cacheDir):
@@ -203,15 +209,16 @@ class QScreenShotContainer(QWidget):
 	
 	def addImage(self,img):
 		scr=_loadScreenShot(img,self.cacheDir)
-		self.th.append(scr)
 		scr.imageLoaded.connect(self._load)
 		scr.start()
+		self.th.append(scr)
 	#def addImage
 
 	def loadScreenShot(self,img,cacheDir=""):
 		if len(cacheDir)==0:
 			cacheDir=self.cacheDir
 		return(_loadScreenShot(img,cacheDir))
+	#def loadScreenShot(self,img,cacheDir="")
 
 	def _load(self,*args):
 		img=args[0]
@@ -237,7 +244,6 @@ class QScreenShotContainer(QWidget):
 
 	def _cleanThreads(self):
 		for th in self.th:
-			th.quit()
 			th.wait()
 	#def _cleanThreads
 #class QScreenShotContainer
