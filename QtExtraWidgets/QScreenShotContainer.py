@@ -108,7 +108,7 @@ class QScreenShotContainer(QWidget):
 	#def eventFilter
 
 	def _initWidget(self):
-		widget=_QTableTouchWidget.QTableTouchWidget()
+		widget=QTableTouchWidget.QTableTouchWidget()
 		widget.setRowCount(1)
 		widget.setShowGrid(True)
 		widget.verticalHeader().hide()
@@ -229,6 +229,7 @@ class QScreenShotContainer(QWidget):
 	#def load
 
 	def clear(self):
+		self._cleanThreads()
 		for i in reversed(range(self.lay.count())): 
 			self.lay.itemAt(i).widget().setParent(None)
 		self.btnImg={}
