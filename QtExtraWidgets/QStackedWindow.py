@@ -82,11 +82,11 @@ class QStackedWindow(QWidget):
 			idx=self._getRowForIdx(idx)
 		self.lstNav.setCurrentRow(idx)
 		self.current=idx
+		if parms!=None:
+			self.stkPan.widget(self.current).setParms(parms)
+			#self.curStack.updateScreen()
 		self.stkPan.setCurrentIndex(self.current)
 		self.curStack=self.getCurrentStack()
-		if parms!=None:
-			self.curStack.setParms(parms)
-			self.curStack.updateScreen()
 		self.setCursor(oldcursor)
 	#def _endSave
 
