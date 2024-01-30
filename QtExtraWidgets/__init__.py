@@ -3,6 +3,7 @@ from . import QCheckableComboBox as _QCheckableComboBox
 from . import QSearchBox as _QSearchBox
 from . import QHotkeyButton as _QHotkeyButton
 from . import QScrollLabel as _QScrollLabel
+from . import QInfoLabel as _QInfoLabel
 from . import QScreenShotContainer as _QScreenShotContainer
 from . import QStackedWindow as _QStackedWindow
 from . import QStackedWindowItem as _QStackedWindowItem
@@ -24,6 +25,10 @@ class QHotkeyButton(_QHotkeyButton.QHotkeyButton):
 		super().__init__(*args,**kwargs)
 
 class QScrollLabel(_QScrollLabel.QScrollLabel):
+	def __init__(self,*args,**kwargs):
+		super().__init__(*args,**kwargs)
+
+class QInfoLabel(_QInfoLabel.QInfoLabel):
 	def __init__(self,*args,**kwargs):
 		super().__init__(*args,**kwargs)
 
