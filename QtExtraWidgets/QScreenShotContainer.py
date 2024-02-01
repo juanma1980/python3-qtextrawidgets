@@ -238,7 +238,7 @@ class QScreenShotContainer(QWidget):
 	def clear(self):
 		self._cleanThreads()
 		for i in reversed(range(self.lay.count())): 
-			self.lay.itemAt(i).widget().setParent(None)
+			self.lay.itemAt(i).widget().deleteLater()
 		self.btnImg={}
 	#def clear
 
