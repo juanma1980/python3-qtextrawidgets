@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QScrollArea,QGridLayout,QLabel,QWidget,QPushButton
 from PySide2.QtGui import QIcon,QColor,QPalette
-from PySide2.QtCore import Qt,Signal
+from PySide2.QtCore import Qt,Signal,QSize
 
 class QInfoLabel(QWidget):
 	clicked=Signal()
@@ -12,38 +12,53 @@ class QInfoLabel(QWidget):
 				if isinstance(i,QWidget):
 					parent = i
 		super().__init__(*args,**kwargs)
+		self.setAttribute(Qt.WA_StyledBackground, True)
+		self.setObjectName("Frame")
 		lay = QGridLayout()
-		lay.setSpacing(3)
+		lay.setContentsMargins(3,3,3,3)
 		lblIcn=QLabel()
 		icn=QIcon.fromTheme("dialog-information")
-		lblIcn.setPixmap(icn.pixmap(24,24))
-		lay.addWidget(lblIcn,0,0,1,1)
+		icnSize=24
+		lblIcn.setPixmap(icn.pixmap(icnSize,icnSize))
+		lblIcn.setMaximumWidth(icnSize)
+		lblIcn.setMaximumHeight(icnSize)
+		lay.addWidget(lblIcn,0,0,1,1,Qt.Alignment(0))
 		self.label = QLabel()
 		self.label.setAlignment(Qt.AlignLeft)
-		#self.label.setWordWrap(True)
-		lay.addWidget(self.label,0,1,1,1)
+		lay.addWidget(self.label,0,1,1,1,Qt.AlignTop)
 		self.label.setText(text)
 		self.label.adjustSize()
 		self.btn=QPushButton()
+		self.btn.setMaximumWidth(icnSize)
+		self.btn.setMaximumHeight(icnSize)
 		self.btn.clicked.connect(self.hide)
 		self.btn.setFlat(True)
 		icn=QIcon.fromTheme("dialog-close")
 		self.btn.setIcon(icn)
-		lay.addWidget(self.btn,0,2,1,1)
+		self.btn.setIconSize(QSize(icnSize,icnSize))
+		lay.addWidget(self.btn,0,2,1,1,Qt.AlignTop)
 		self.btnAction=QPushButton("")
 		self.btnAction.setVisible(False)
 		self.btnAction.clicked.connect(self.emitClick)
-		lay.addWidget(self.btnAction,1,0,1,2)
+		lay.addWidget(self.btnAction,1,1,1,2,Qt.AlignRight)
 		self.setLayout(lay)
-		color=QColor(QPalette().color(QPalette.Active,QPalette.Midlight))
+		bcolor=QColor(QPalette().color(QPalette.Active,QPalette.Highlight))
+		color=QColor(QPalette().color(QPalette.Inactive,QPalette.Highlight))
 		self.setAutoFillBackground(True)
 		pal=self.palette()
-		pal.setColor(QPalette.Window,color)
-		pal.setColor(QPalette.Button,color)
-		self.setPalette(pal);
+		#pal.setColor(QPalette.Window,bcolor)
+		rgbColor="{0},{1},{2}".format(color.red(),color.green(),color.blue())
+		rgbBcolor="{0},{1},{2}".format(bcolor.red(),bcolor.green(),bcolor.blue())
+		self.setStyleSheet("""#Frame {
+			background-color: rgb(%s); 
+			border-style: solid; 
+			border-color: rgb(%s); 
+			border-width: 1px; 
+			border-radius: 2px;}"""%(rgbColor,rgbBcolor))
+		#lay.setColumnStretch(1,1)
 
-#		self.setFixedWidth(self.label.sizeHint().width())
-#		self.setFixedHeight(self.label.sizeHint().height()/2)
+		#pal.setColor(QPalette.Button,color)
+		#self.setPalette(pal);
 	#def __init__
 
 	def hide(self):
@@ -61,6 +76,14 @@ class QInfoLabel(QWidget):
 
 	def setActionText(self,text):
 		self.btnAction.setText(text)
+		self.btnAction.setVisible(True)
+
+	def setActionIcon(self,icon,size=0):
+		if isinstance(icon,str)==True:
+			icon=QIcon.fromTheme(icon)
+		self.btnAction.setIcon(icon)
+		if size>0:
+			self.btnAction.setIconSize(QSize(size,size))
 		self.btnAction.setVisible(True)
 
 	def setWordWrap(self,boolWrap):
